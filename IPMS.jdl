@@ -1,0 +1,44 @@
+application {
+  config {
+    baseName IPMS
+    applicationType monolith
+    authenticationType oauth2
+    packageName com.github.zzzarius.ipms
+    devDatabaseType h2Memory
+    prodDatabaseType mysql
+    cacheProvider ehcache
+    buildTool maven
+    clientFramework react
+    testFrameworks [cucumber]
+  }
+  entities *
+}
+
+enum Category {
+  BLACK("Black"),
+  RED("Red"),
+  YELLOW("Yellow"),
+  GREEN("Green")
+}
+
+entity Incident {
+  name String minlength(3) required
+  startDate Instant required
+}
+
+entity Patient {
+  firstName String required minlength(2)
+  lastName String required minlength(2)
+  triageCategory Category
+}
+
+entity Tag {
+  name String required minlength(2)
+}
+
+relationship ManyToOne {
+  Incident{user(login)} to User
+  Incident{patient(lastName)} to Patient
+}
+
+paginate Incident, Patient with pagination

@@ -1,0 +1,42 @@
+{
+  "name": "Incident",
+  "fields": [
+    {
+      "fieldName": "name",
+      "fieldType": "String",
+      "fieldValidateRules": ["minlength", "required"],
+      "fieldValidateRulesMinlength": "3"
+    },
+    {
+      "fieldName": "startDate",
+      "fieldType": "Instant",
+      "fieldValidateRules": ["required"]
+    }
+  ],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "user",
+      "otherEntityRelationshipName": "incident",
+      "relationshipName": "user",
+      "otherEntityField": "login"
+    },
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "patient",
+      "otherEntityRelationshipName": "incident",
+      "relationshipName": "patient",
+      "otherEntityField": "lastName"
+    }
+  ],
+  "entityTableName": "incident",
+  "dto": "no",
+  "pagination": "pagination",
+  "service": "no",
+  "jpaMetamodelFiltering": false,
+  "fluentMethods": true,
+  "readOnly": false,
+  "embedded": false,
+  "applications": ["IPMS"],
+  "changelogDate": "20210805210959"
+}

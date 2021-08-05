@@ -1,0 +1,11 @@
+{
+  "ipmsApp": {
+    "Category": {
+      "null": "",
+      "BLACK": "Black",
+      "RED": "Red",
+      "YELLOW": "Yellow",
+      "GREEN": "Green"
+    }
+  }
+}

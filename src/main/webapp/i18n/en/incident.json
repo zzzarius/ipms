@@ -1,0 +1,27 @@
+{
+  "ipmsApp": {
+    "incident": {
+      "home": {
+        "title": "Incidents",
+        "refreshListLabel": "Refresh list",
+        "createLabel": "Create a new Incident",
+        "createOrEditLabel": "Create or edit a Incident",
+        "notFound": "No Incidents found"
+      },
+      "created": "A new Incident is created with identifier {{ param }}",
+      "updated": "A Incident is updated with identifier {{ param }}",
+      "deleted": "A Incident is deleted with identifier {{ param }}",
+      "delete": {
+        "question": "Are you sure you want to delete Incident {{ id }}?"
+      },
+      "detail": {
+        "title": "Incident"
+      },
+      "id": "ID",
+      "name": "Name",
+      "startDate": "Start Date",
+      "user": "User",
+      "patient": "Patient"
+    }
+  }
+}
