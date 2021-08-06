@@ -1,11 +1,11 @@
 {
   "generator-jhipster": {
-    "authenticationType": "oauth2",
+    "authenticationType": "jwt",
     "cacheProvider": "ehcache",
     "clientFramework": "react",
     "serverPort": "8080",
     "serviceDiscoveryType": false,
-    "skipUserManagement": true,
+    "skipUserManagement": false,
     "withAdminUi": true,
     "baseName": "IPMS",
     "buildTool": "maven",
@@ -34,15 +34,16 @@
     "clientTheme": "none",
     "clientThemeVariant": "",
     "applicationIndex": 0,
-    "entities": ["Incident", "Patient", "Tag"],
+    "entities": ["Incident", "Patient"],
     "skipCheckLengthOfIdentifier": false,
     "skipFakeData": false,
     "blueprints": [],
     "otherModules": [],
     "pages": [],
     "nativeLanguage": "en",
-    "creationTimestamp": 1628197739657,
+    "creationTimestamp": 1628241745861,
+    "jwtSecretKey": "ODI4NzAxY2RlNzQ1NjhiNGQyNjU2NjdlZmMwZWYyODE0MzZhZmM2NDQ5NTcxMzRlZTdkM2E3OTNlNGJmNDcyNDk3MzA2YjVjNjZkYTZjYWE5NTRlNDEzNDMxYjJiYTBmNmQ2NmQ4MzRlYTBjOTA1ZDg2YjUyMGI1ZGYyOWUxZjc=",
     "devServerPort": 9060,
-    "lastLiquibaseTimestamp": 1628197919000
+    "lastLiquibaseTimestamp": 1628241865000
   }
 }

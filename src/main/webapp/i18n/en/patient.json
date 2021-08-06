@@ -20,7 +20,8 @@
       "id": "ID",
       "firstName": "First Name",
       "lastName": "Last Name",
-      "triageCategory": "Triage Category"
+      "triageCategory": "Triage Category",
+      "incident": "Incident"
     }
   }
 }

@@ -1,5 +1,6 @@
 package com.github.zzzarius.ipms.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.zzzarius.ipms.domain.enumeration.Category;
 import java.io.Serializable;
 import javax.persistence.*;
@@ -34,6 +35,10 @@ public class Patient implements Serializable {
     @Enumerated(EnumType.STRING)
     @Column(name = "triage_category")
     private Category triageCategory;
+
+    @ManyToOne
+    @JsonIgnoreProperties(value = { "patients" }, allowSetters = true)
+    private Incident incident;
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -86,6 +91,19 @@ public class Patient implements Serializable {
 
     public void setTriageCategory(Category triageCategory) {
         this.triageCategory = triageCategory;
+    }
+
+    public Incident getIncident() {
+        return this.incident;
+    }
+
+    public Patient incident(Incident incident) {
+        this.setIncident(incident);
+        return this;
+    }
+
+    public void setIncident(Incident incident) {
+        this.incident = incident;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

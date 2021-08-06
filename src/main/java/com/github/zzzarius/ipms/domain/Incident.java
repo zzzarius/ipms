@@ -1,7 +1,10 @@
 package com.github.zzzarius.ipms.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 import javax.persistence.*;
 import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
@@ -28,13 +31,12 @@ public class Incident implements Serializable {
 
     @NotNull
     @Column(name = "start_date", nullable = false)
-    private Instant startDate;
+    private LocalDate startDate;
 
-    @ManyToOne
-    private User user;
-
-    @ManyToOne
-    private Patient patient;
+    @OneToMany(mappedBy = "incident")
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    @JsonIgnoreProperties(value = { "incident" }, allowSetters = true)
+    private Set<Patient> patients = new HashSet<>();
 
     // jhipster-needle-entity-add-field - JHipster will add fields here
     public Long getId() {
@@ -63,43 +65,48 @@ public class Incident implements Serializable {
         this.name = name;
     }
 
-    public Instant getStartDate() {
+    public LocalDate getStartDate() {
         return this.startDate;
     }
 
-    public Incident startDate(Instant startDate) {
+    public Incident startDate(LocalDate startDate) {
         this.startDate = startDate;
         return this;
     }
 
-    public void setStartDate(Instant startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public User getUser() {
-        return this.user;
+    public Set<Patient> getPatients() {
+        return this.patients;
     }
 
-    public Incident user(User user) {
-        this.setUser(user);
+    public Incident patients(Set<Patient> patients) {
+        this.setPatients(patients);
         return this;
     }
 
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Patient getPatient() {
-        return this.patient;
-    }
-
-    public Incident patient(Patient patient) {
-        this.setPatient(patient);
+    public Incident addPatient(Patient patient) {
+        this.patients.add(patient);
+        patient.setIncident(this);
         return this;
     }
 
-    public void setPatient(Patient patient) {
-        this.patient = patient;
+    public Incident removePatient(Patient patient) {
+        this.patients.remove(patient);
+        patient.setIncident(null);
+        return this;
+    }
+
+    public void setPatients(Set<Patient> patients) {
+        if (this.patients != null) {
+            this.patients.forEach(i -> i.setIncident(null));
+        }
+        if (patients != null) {
+            patients.forEach(i -> i.setIncident(this));
+        }
+        this.patients = patients;
     }
 
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here

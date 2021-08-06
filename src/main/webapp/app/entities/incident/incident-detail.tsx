@@ -40,15 +40,9 @@ export const IncidentDetail = (props: RouteComponentProps<{ id: string }>) => {
               <Translate contentKey="ipmsApp.incident.startDate">Start Date</Translate>
             </span>
           </dt>
-          <dd>{incidentEntity.startDate ? <TextFormat value={incidentEntity.startDate} type="date" format={APP_DATE_FORMAT} /> : null}</dd>
-          <dt>
-            <Translate contentKey="ipmsApp.incident.user">User</Translate>
-          </dt>
-          <dd>{incidentEntity.user ? incidentEntity.user.login : ''}</dd>
-          <dt>
-            <Translate contentKey="ipmsApp.incident.patient">Patient</Translate>
-          </dt>
-          <dd>{incidentEntity.patient ? incidentEntity.patient.lastName : ''}</dd>
+          <dd>
+            {incidentEntity.startDate ? <TextFormat value={incidentEntity.startDate} type="date" format={APP_LOCAL_DATE_FORMAT} /> : null}
+          </dd>
         </dl>
         <Button tag={Link} to="/incident" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

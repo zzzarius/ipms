@@ -4,14 +4,18 @@
 import thunk from 'redux-thunk';
 import axios from 'axios';
 import sinon from 'sinon';
+import { Storage } from 'react-jhipster';
 import configureStore from 'redux-mock-store';
 
 import authentication, {
   getSession,
   getAccount,
-  logoutServer,
+  authenticate,
+  login,
   clearAuthentication,
   logout,
+  logoutSession,
+  clearAuthToken,
   authError,
   clearAuth,
   initialState,
@@ -30,13 +34,37 @@ describe('Authentication reducer tests', () => {
         loading: false,
         isAuthenticated: false,
         errorMessage: null, // Errors returned from server side
+        loginSuccess: false,
+        loginError: false, // Errors returned from server side
+        showModalLogin: false,
         redirectMessage: null,
       });
       expect(isAccountEmpty(toTest));
     });
   });
 
+  describe('Requests', () => {
+    it('should detect a request', () => {
+      expect(authentication(undefined, { type: authenticate.pending.type })).toMatchObject({
+        loading: true,
+      });
+      expect(authentication(undefined, { type: getAccount.pending.type })).toMatchObject({
+        loading: true,
+      });
+    });
+  });
+
   describe('Success', () => {
+    it('should detect a success on login', () => {
+      const toTest = authentication(undefined, { type: authenticate.fulfilled.type });
+      expect(toTest).toMatchObject({
+        loading: false,
+        loginError: false,
+        loginSuccess: true,
+        showModalLogin: false,
+      });
+    });
+
     it('should detect a success on get session and be authenticated', () => {
       const payload = { data: { activated: true } };
       const toTest = authentication(undefined, { type: getAccount.fulfilled.type, payload });
@@ -59,6 +87,18 @@ describe('Authentication reducer tests', () => {
   });
 
   describe('Failure', () => {
+    it('should detect a failure on login', () => {
+      const error = { message: 'Something happened.' };
+      const toTest = authentication(undefined, { type: authenticate.rejected.type, error });
+
+      expect(toTest).toMatchObject({
+        errorMessage: error.message,
+        showModalLogin: true,
+        loginError: true,
+      });
+      expect(isAccountEmpty(toTest));
+    });
+
     it('should detect a failure', () => {
       const error = { message: 'Something happened.' };
       const toTest = authentication(undefined, { type: getAccount.rejected.type, error });
@@ -66,6 +106,7 @@ describe('Authentication reducer tests', () => {
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
+        showModalLogin: true,
         errorMessage: error.message,
       });
       expect(isAccountEmpty(toTest));
@@ -74,11 +115,13 @@ describe('Authentication reducer tests', () => {
 
   describe('Other cases', () => {
     it('should properly reset the current state when a logout is requested', () => {
-      const payload = { data: { idToken: 'xyz', logoutUrl: 'http://localhost:8080/logout' } };
-      const toTest = authentication(undefined, { type: logoutServer.fulfilled.type, payload });
+      const toTest = authentication(undefined, logoutSession());
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
+        loginSuccess: false,
+        loginError: false,
+        showModalLogin: true,
         errorMessage: null,
         redirectMessage: null,
       });
@@ -91,6 +134,9 @@ describe('Authentication reducer tests', () => {
       expect(toTest).toMatchObject({
         loading: false,
         isAuthenticated: false,
+        loginSuccess: false,
+        loginError: false,
+        showModalLogin: true,
         errorMessage: null,
         redirectMessage: message,
       });
@@ -101,6 +147,7 @@ describe('Authentication reducer tests', () => {
       const toTest = authentication({ ...initialState, isAuthenticated: true }, clearAuth());
       expect(toTest).toMatchObject({
         loading: false,
+        showModalLogin: true,
         isAuthenticated: false,
       });
     });
@@ -134,29 +181,67 @@ describe('Authentication reducer tests', () => {
     });
 
     it('dispatches LOGOUT actions', async () => {
-      axios.post = sinon.stub().returns(Promise.resolve({}));
-      const expectedActions = [
-        {
-          type: logoutServer.pending.type,
-        },
-        {
-          type: logoutServer.fulfilled.type,
-          payload: {},
-        },
-        {
-          type: getAccount.pending.type,
-        },
-      ];
+      const expectedActions = [logoutSession()];
       await store.dispatch(logout());
       expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
-      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
-      expect(store.getActions()[2]).toMatchObject(expectedActions[2]);
     });
 
     it('dispatches CLEAR_AUTH actions', async () => {
       const expectedActions = [authError('message'), clearAuth()];
       await store.dispatch(clearAuthentication('message'));
       expect(store.getActions()).toEqual(expectedActions);
+    });
+
+    it('dispatches LOGIN, GET_SESSION and SET_LOCALE success and request actions', async () => {
+      const loginResponse = { headers: { authorization: 'auth' } };
+      axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
+      const expectedActions = [
+        {
+          type: authenticate.pending.type,
+        },
+        {
+          type: authenticate.fulfilled.type,
+          payload: loginResponse,
+        },
+        {
+          type: getAccount.pending.type,
+        },
+      ];
+      await store.dispatch(login('test', 'test'));
+      expect(store.getActions()[0]).toMatchObject(expectedActions[0]);
+      expect(store.getActions()[1]).toMatchObject(expectedActions[1]);
+      expect(store.getActions()[2]).toMatchObject(expectedActions[2]);
+    });
+  });
+  describe('clearAuthToken', () => {
+    let store;
+    beforeEach(() => {
+      const mockStore = configureStore([thunk]);
+      store = mockStore({ authentication: { account: { langKey: 'en' } } });
+    });
+    it('clears the session token on clearAuthToken', async () => {
+      const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
+      const loginResponse = { headers: { authorization: 'Bearer TestToken' } };
+      axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
+
+      await store.dispatch(login('test', 'test'));
+      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe('TestToken');
+      expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe(undefined);
+      clearAuthToken();
+      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe(undefined);
+      expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe(undefined);
+    });
+    it('clears the local storage token on clearAuthToken', async () => {
+      const AUTH_TOKEN_KEY = 'jhi-authenticationToken';
+      const loginResponse = { headers: { authorization: 'Bearer TestToken' } };
+      axios.post = sinon.stub().returns(Promise.resolve(loginResponse));
+
+      await store.dispatch(login('user', 'user', true));
+      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe(undefined);
+      expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe('TestToken');
+      clearAuthToken();
+      expect(Storage.session.get(AUTH_TOKEN_KEY)).toBe(undefined);
+      expect(Storage.local.get(AUTH_TOKEN_KEY)).toBe(undefined);
     });
   });
 });

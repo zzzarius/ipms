@@ -112,6 +112,9 @@ export const Patient = (props: RouteComponentProps<{ url: string }>) => {
                 <th className="hand" onClick={sort('triageCategory')}>
                   <Translate contentKey="ipmsApp.patient.triageCategory">Triage Category</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
+                <th>
+                  <Translate contentKey="ipmsApp.patient.incident">Incident</Translate> <FontAwesomeIcon icon="sort" />
+                </th>
                 <th />
               </tr>
             </thead>
@@ -128,6 +131,7 @@ export const Patient = (props: RouteComponentProps<{ url: string }>) => {
                   <td>
                     <Translate contentKey={`ipmsApp.Category.${patient.triageCategory}`} />
                   </td>
+                  <td>{patient.incident ? <Link to={`incident/${patient.incident.id}`}>{patient.incident.name}</Link> : ''}</td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${patient.id}`} color="info" size="sm" data-cy="entityDetailsButton">

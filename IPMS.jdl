@@ -2,7 +2,7 @@ application {
   config {
     baseName IPMS
     applicationType monolith
-    authenticationType oauth2
+    /* authenticationType oauth2 */
     packageName com.github.zzzarius.ipms
     devDatabaseType h2Memory
     prodDatabaseType mysql
@@ -23,7 +23,7 @@ enum Category {
 
 entity Incident {
   name String minlength(3) required
-  startDate Instant required
+  startDate LocalDate required
 }
 
 entity Patient {
@@ -32,13 +32,10 @@ entity Patient {
   triageCategory Category
 }
 
-entity Tag {
-  name String required minlength(2)
+relationship OneToMany {
+  Incident to Patient{incident(name)}
 }
 
-relationship ManyToOne {
-  Incident{user(login)} to User
-  Incident{patient(lastName)} to Patient
-}
-
+filter *
+service * with serviceClass
 paginate Incident, Patient with pagination

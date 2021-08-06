@@ -47,6 +47,10 @@ export const PatientDetail = (props: RouteComponentProps<{ id: string }>) => {
             </span>
           </dt>
           <dd>{patientEntity.triageCategory}</dd>
+          <dt>
+            <Translate contentKey="ipmsApp.patient.incident">Incident</Translate>
+          </dt>
+          <dd>{patientEntity.incident ? patientEntity.incident.name : ''}</dd>
         </dl>
         <Button tag={Link} to="/patient" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}

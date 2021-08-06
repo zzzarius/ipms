@@ -20,7 +20,6 @@
       "id": "ID",
       "name": "Name",
       "startDate": "Start Date",
-      "user": "User",
       "patient": "Patient"
     }
   }

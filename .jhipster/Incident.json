@@ -9,34 +9,26 @@
     },
     {
       "fieldName": "startDate",
-      "fieldType": "Instant",
+      "fieldType": "LocalDate",
       "fieldValidateRules": ["required"]
     }
   ],
   "relationships": [
     {
-      "relationshipType": "many-to-one",
-      "otherEntityName": "user",
-      "otherEntityRelationshipName": "incident",
-      "relationshipName": "user",
-      "otherEntityField": "login"
-    },
-    {
-      "relationshipType": "many-to-one",
+      "relationshipType": "one-to-many",
       "otherEntityName": "patient",
       "otherEntityRelationshipName": "incident",
-      "relationshipName": "patient",
-      "otherEntityField": "lastName"
+      "relationshipName": "patient"
     }
   ],
   "entityTableName": "incident",
   "dto": "no",
   "pagination": "pagination",
-  "service": "no",
-  "jpaMetamodelFiltering": false,
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
   "applications": ["IPMS"],
-  "changelogDate": "20210805210959"
+  "changelogDate": "20210806092325"
 }

@@ -1,7 +1,6 @@
 package com.github.zzzarius.ipms.repository;
 
 import com.github.zzzarius.ipms.domain.Incident;
-import java.util.List;
 import org.springframework.data.jpa.repository.*;
 import org.springframework.stereotype.Repository;
 
@@ -10,7 +9,4 @@ import org.springframework.stereotype.Repository;
  */
 @SuppressWarnings("unused")
 @Repository
-public interface IncidentRepository extends JpaRepository<Incident, Long> {
-    @Query("select incident from Incident incident where incident.user.login = ?#{principal.preferredUsername}")
-    List<Incident> findByUserIsCurrentUser();
-}
+public interface IncidentRepository extends JpaRepository<Incident, Long>, JpaSpecificationExecutor<Incident> {}

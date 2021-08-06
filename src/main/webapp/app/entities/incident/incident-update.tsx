@@ -4,10 +4,6 @@ import { Button, Row, Col, FormText } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { IUser } from 'app/shared/model/user.model';
-import { getUsers } from 'app/shared/reducers/user-management';
-import { IPatient } from 'app/shared/model/patient.model';
-import { getEntities as getPatients } from 'app/entities/patient/patient.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './incident.reducer';
 import { IIncident } from 'app/shared/model/incident.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -19,8 +15,6 @@ export const IncidentUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
-  const users = useAppSelector(state => state.userManagement.users);
-  const patients = useAppSelector(state => state.patient.entities);
   const incidentEntity = useAppSelector(state => state.incident.entity);
   const loading = useAppSelector(state => state.incident.loading);
   const updating = useAppSelector(state => state.incident.updating);
@@ -36,9 +30,6 @@ export const IncidentUpdate = (props: RouteComponentProps<{ id: string }>) => {
     } else {
       dispatch(getEntity(props.match.params.id));
     }
-
-    dispatch(getUsers({}));
-    dispatch(getPatients({}));
   }, []);
 
   useEffect(() => {
@@ -48,13 +39,9 @@ export const IncidentUpdate = (props: RouteComponentProps<{ id: string }>) => {
   }, [updateSuccess]);
 
   const saveEntity = values => {
-    values.startDate = convertDateTimeToServer(values.startDate);
-
     const entity = {
       ...incidentEntity,
       ...values,
-      user: users.find(it => it.id.toString() === values.userId.toString()),
-      patient: patients.find(it => it.id.toString() === values.patientId.toString()),
     };
 
     if (isNew) {
@@ -66,14 +53,9 @@ export const IncidentUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const defaultValues = () =>
     isNew
-      ? {
-          startDate: displayDefaultDateTime(),
-        }
+      ? {}
       : {
           ...incidentEntity,
-          startDate: convertDateTimeFromServer(incidentEntity.startDate),
-          userId: incidentEntity?.user?.id,
-          patientId: incidentEntity?.patient?.id,
         };
 
   return (
@@ -117,38 +99,11 @@ export const IncidentUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 id="incident-startDate"
                 name="startDate"
                 data-cy="startDate"
-                type="datetime-local"
-                placeholder="YYYY-MM-DD HH:mm"
+                type="date"
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
               />
-              <ValidatedField id="incident-user" name="userId" data-cy="user" label={translate('ipmsApp.incident.user')} type="select">
-                <option value="" key="0" />
-                {users
-                  ? users.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.login}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
-              <ValidatedField
-                id="incident-patient"
-                name="patientId"
-                data-cy="patient"
-                label={translate('ipmsApp.incident.patient')}
-                type="select"
-              >
-                <option value="" key="0" />
-                {patients
-                  ? patients.map(otherEntity => (
-                      <option value={otherEntity.id} key={otherEntity.id}>
-                        {otherEntity.lastName}
-                      </option>
-                    ))
-                  : null}
-              </ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/incident" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;

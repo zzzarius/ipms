@@ -19,15 +19,23 @@
       "fieldValues": "BLACK (Black),RED (Red),YELLOW (Yellow),GREEN (Green)"
     }
   ],
-  "relationships": [],
+  "relationships": [
+    {
+      "relationshipType": "many-to-one",
+      "otherEntityName": "incident",
+      "otherEntityRelationshipName": "patient",
+      "relationshipName": "incident",
+      "otherEntityField": "name"
+    }
+  ],
   "entityTableName": "patient",
   "dto": "no",
   "pagination": "pagination",
-  "service": "no",
-  "jpaMetamodelFiltering": false,
+  "service": "serviceClass",
+  "jpaMetamodelFiltering": true,
   "fluentMethods": true,
   "readOnly": false,
   "embedded": false,
   "applications": ["IPMS"],
-  "changelogDate": "20210805211059"
+  "changelogDate": "20210806092425"
 }

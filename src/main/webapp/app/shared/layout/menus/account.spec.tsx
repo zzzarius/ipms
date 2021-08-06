@@ -6,7 +6,6 @@ import { render } from '@testing-library/react';
 import { Router } from 'react-router-dom';
 import { createMemoryHistory } from 'history';
 
-import { getLoginUrl } from 'app/shared/util/url-utils';
 import { AccountMenu } from './account';
 
 describe('AccountMenu', () => {
@@ -53,7 +52,7 @@ describe('AccountMenu', () => {
   it('Renders a guest AccountMenu component', () => {
     const html = guestWrapper();
 
-    expect(html).toContain(getLoginUrl());
+    expect(html).toContain('/login');
     expect(html).not.toContain('/logout');
   });
 });

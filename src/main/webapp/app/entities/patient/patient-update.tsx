@@ -4,6 +4,8 @@ import { Button, Row, Col, FormText } from 'reactstrap';
 import { isNumber, Translate, translate, ValidatedField, ValidatedForm } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
+import { IIncident } from 'app/shared/model/incident.model';
+import { getEntities as getIncidents } from 'app/entities/incident/incident.reducer';
 import { getEntity, updateEntity, createEntity, reset } from './patient.reducer';
 import { IPatient } from 'app/shared/model/patient.model';
 import { convertDateTimeFromServer, convertDateTimeToServer, displayDefaultDateTime } from 'app/shared/util/date-utils';
@@ -15,6 +17,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
 
   const [isNew] = useState(!props.match.params || !props.match.params.id);
 
+  const incidents = useAppSelector(state => state.incident.entities);
   const patientEntity = useAppSelector(state => state.patient.entity);
   const loading = useAppSelector(state => state.patient.loading);
   const updating = useAppSelector(state => state.patient.updating);
@@ -30,6 +33,8 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
     } else {
       dispatch(getEntity(props.match.params.id));
     }
+
+    dispatch(getIncidents({}));
   }, []);
 
   useEffect(() => {
@@ -42,6 +47,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
     const entity = {
       ...patientEntity,
       ...values,
+      incident: incidents.find(it => it.id.toString() === values.incidentId.toString()),
     };
 
     if (isNew) {
@@ -57,6 +63,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
       : {
           ...patientEntity,
           triageCategory: 'BLACK',
+          incidentId: patientEntity?.incident?.id,
         };
 
   return (
@@ -117,6 +124,22 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 <option value="RED">{translate('ipmsApp.Category.RED')}</option>
                 <option value="YELLOW">{translate('ipmsApp.Category.YELLOW')}</option>
                 <option value="GREEN">{translate('ipmsApp.Category.GREEN')}</option>
+              </ValidatedField>
+              <ValidatedField
+                id="patient-incident"
+                name="incidentId"
+                data-cy="incident"
+                label={translate('ipmsApp.patient.incident')}
+                type="select"
+              >
+                <option value="" key="0" />
+                {incidents
+                  ? incidents.map(otherEntity => (
+                      <option value={otherEntity.id} key={otherEntity.id}>
+                        {otherEntity.name}
+                      </option>
+                    ))
+                  : null}
               </ValidatedField>
               <Button tag={Link} id="cancel-save" data-cy="entityCreateCancelButton" to="/patient" replace color="info">
                 <FontAwesomeIcon icon="arrow-left" />

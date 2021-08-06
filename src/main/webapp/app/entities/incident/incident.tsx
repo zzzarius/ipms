@@ -1,15 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, TextFormat, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { getEntities } from './incident.reducer';
-import { IIncident } from 'app/shared/model/incident.model';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
-import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
+import React, { useEffect, useState } from 'react';
+import { getSortState, JhiItemCount, JhiPagination, TextFormat, Translate } from 'react-jhipster';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Form, FormGroup, Input, Row, Table } from 'reactstrap';
+import { getEntities } from './incident.reducer';
 
 export const Incident = (props: RouteComponentProps<{ url: string }>) => {
   const dispatch = useAppDispatch();
@@ -109,11 +107,17 @@ export const Incident = (props: RouteComponentProps<{ url: string }>) => {
                 <th className="hand" onClick={sort('startDate')}>
                   <Translate contentKey="ipmsApp.incident.startDate">Start Date</Translate> <FontAwesomeIcon icon="sort" />
                 </th>
-                <th>
-                  <Translate contentKey="ipmsApp.incident.user">User</Translate> <FontAwesomeIcon icon="sort" />
+                <th />
+              </tr>
+              <tr>
+                <th className="filter-input">
+                  <Input type="text" name="ipmsApp.incident.id.filter" />
                 </th>
-                <th>
-                  <Translate contentKey="ipmsApp.incident.patient">Patient</Translate> <FontAwesomeIcon icon="sort" />
+                <th className="filter-input">
+                  <Input type="text" name="ipmsApp.incident.name.filter" />
+                </th>
+                <th className="filter-input">
+                  <Input type="text" name="ipmsApp.incident.startDate.filter" />
                 </th>
                 <th />
               </tr>
@@ -127,9 +131,9 @@ export const Incident = (props: RouteComponentProps<{ url: string }>) => {
                     </Button>
                   </td>
                   <td>{incident.name}</td>
-                  <td>{incident.startDate ? <TextFormat type="date" value={incident.startDate} format={APP_DATE_FORMAT} /> : null}</td>
-                  <td>{incident.user ? incident.user.login : ''}</td>
-                  <td>{incident.patient ? <Link to={`patient/${incident.patient.id}`}>{incident.patient.lastName}</Link> : ''}</td>
+                  <td>
+                    {incident.startDate ? <TextFormat type="date" value={incident.startDate} format={APP_LOCAL_DATE_FORMAT} /> : null}
+                  </td>
                   <td className="text-right">
                     <div className="btn-group flex-btn-group-container">
                       <Button tag={Link} to={`${match.url}/${incident.id}`} color="info" size="sm" data-cy="entityDetailsButton">
