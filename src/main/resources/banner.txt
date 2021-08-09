@@ -1,4 +1,16 @@
 
+  ${AnsiColor.BRIGHT_RED} ██▓ ██▓███   ███▄ ▄███▓  ██████
+  ${AnsiColor.BRIGHT_RED}▓██▒▓██░  ██▒▓██▒▀█▀ ██▒▒██    ▒
+  ${AnsiColor.BRIGHT_RED}▒██▒▓██░ ██▓▒▓██    ▓██░░ ▓██▄
+  ${AnsiColor.BRIGHT_RED}░██░▒██▄█▓▒ ▒▒██    ▒██   ▒   ██▒
+  ${AnsiColor.BRIGHT_RED}░██░▒██▒ ░  ░▒██▒   ░██▒▒██████▒▒
+  ${AnsiColor.BRIGHT_RED}░▓  ▒▓▒░ ░  ░░ ▒░   ░  ░▒ ▒▓▒ ▒ ░
+  ${AnsiColor.BRIGHT_RED} ▒ ░░▒ ░     ░  ░      ░░ ░▒  ░ ░
+  ${AnsiColor.BRIGHT_RED} ▒ ░░░       ░      ░   ░  ░  ░
+  ${AnsiColor.BRIGHT_RED} ░                  ░         ░
+
+${AnsiColor.GREEN} Powered by
+
   ${AnsiColor.GREEN}      ██╗${AnsiColor.CYAN} ██╗   ██╗ ████████╗ ███████╗   ██████╗ ████████╗ ████████╗ ███████╗
   ${AnsiColor.GREEN}      ██║${AnsiColor.CYAN} ██║   ██║ ╚══██╔══╝ ██╔═══██╗ ██╔════╝ ╚══██╔══╝ ██╔═════╝ ██╔═══██╗
   ${AnsiColor.GREEN}      ██║${AnsiColor.CYAN} ████████║    ██║    ███████╔╝ ╚█████╗     ██║    ██████╗   ███████╔╝
