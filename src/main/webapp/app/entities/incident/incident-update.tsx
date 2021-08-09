@@ -101,6 +101,7 @@ export const IncidentUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 name="startDate"
                 data-cy="startDate"
                 type="date"
+                max={new Date().toISOString().split('T')[0]}
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                 }}
