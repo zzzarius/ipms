@@ -4,6 +4,7 @@ import { createAsyncThunk, isFulfilled, isPending, isRejected } from '@reduxjs/t
 import { cleanEntity } from 'app/shared/util/entity-utils';
 import { IQueryParams, createEntitySlice, EntityState, serializeAxiosError } from 'app/shared/reducers/reducer.utils';
 import { IPatient, defaultValue } from 'app/shared/model/patient.model';
+import { categoriesStartsWith } from 'app/shared/model/enumerations/category.model';
 
 const initialState: EntityState<IPatient> = {
   loading: false,
@@ -23,6 +24,34 @@ export const getEntities = createAsyncThunk('patient/fetch_entity_list', async (
   const requestUrl = `${apiUrl}${sort ? `?page=${page}&size=${size}&sort=${sort}&` : '?'}cacheBuster=${new Date().getTime()}`;
   return axios.get<IPatient[]>(requestUrl);
 });
+
+export const getFilteredEntities = createAsyncThunk(
+  'patient/fetch_filtered_entity_list',
+  async ({ page, size, sort, idFilter, firstNameFilter, lastNameFilter, triageCategoryFilter, incidentFilter }: IQueryParams) => {
+    const catcheBusterParameter = `?cacheBuster=${new Date().getTime()}`;
+    const sortParameters = sort ? `&page=${page}&size=${size}&sort=${sort}` : '';
+    const idFilterParameter = idFilter ? `&id.equals=${idFilter}` : '';
+    const firstNameFilterParameter = firstNameFilter ? `&firstName.contains=${firstNameFilter}` : '';
+    const lastNameFilterParameter = lastNameFilter ? `&lastName.contains=${lastNameFilter}` : '';
+    const triageCategoryFilterParameter = triageCategoryFilter
+      ? `&triageCategory.in=${categoriesStartsWith(triageCategoryFilter).join(',')}`
+      : '';
+    const incidentFilterParameter = incidentFilter ? `&incidentName.contains=${incidentFilter}` : '';
+    const requestUrl = [
+      apiUrl,
+      catcheBusterParameter,
+      sortParameters,
+      idFilterParameter,
+      firstNameFilterParameter,
+      lastNameFilterParameter,
+      triageCategoryFilterParameter,
+      incidentFilterParameter,
+    ].join('');
+    // eslint-disable-next-line no-console
+    console.log({ requestUrl });
+    return axios.get<IPatient[]>(requestUrl);
+  }
+);
 
 export const getEntity = createAsyncThunk(
   'patient/fetch_entity',
@@ -90,7 +119,7 @@ export const PatientSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = {};
       })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
+      .addMatcher(isFulfilled(getEntities, getFilteredEntities), (state, action) => {
         return {
           ...state,
           loading: false,
@@ -104,7 +133,7 @@ export const PatientSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getEntity, getFilteredEntities), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;

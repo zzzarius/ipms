@@ -1,15 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { Link, RouteComponentProps } from 'react-router-dom';
-import { Button, Col, Row, Table } from 'reactstrap';
-import { Translate, getSortState, JhiPagination, JhiItemCount } from 'react-jhipster';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-
-import { getEntities } from './patient.reducer';
-import { IPatient } from 'app/shared/model/patient.model';
-import { APP_DATE_FORMAT, APP_LOCAL_DATE_FORMAT } from 'app/config/constants';
-import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
-import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
 import { useAppDispatch, useAppSelector } from 'app/config/store';
+import { overridePaginationStateWithQueryParams } from 'app/shared/util/entity-utils';
+import { ASC, DESC, ITEMS_PER_PAGE, SORT } from 'app/shared/util/pagination.constants';
+import React, { ChangeEventHandler, useEffect, useState, useRef } from 'react';
+import { getSortState, JhiItemCount, JhiPagination, Translate } from 'react-jhipster';
+import { Link, RouteComponentProps } from 'react-router-dom';
+import { Button, Input, Row, Table } from 'reactstrap';
+import { getEntities, getFilteredEntities } from './patient.reducer';
 
 export const Patient = (props: RouteComponentProps<{ url: string }>) => {
   const dispatch = useAppDispatch();
@@ -22,6 +19,12 @@ export const Patient = (props: RouteComponentProps<{ url: string }>) => {
   const loading = useAppSelector(state => state.patient.loading);
   const totalItems = useAppSelector(state => state.patient.totalItems);
 
+  const [idFilter, setIdFilter] = useState('');
+  const [firstNameFilter, setFirstNameFilter] = useState('');
+  const [lastNameFilter, setLastNameFilte] = useState('');
+  const [triageCategoryFilter, setTriageCategoryFilter] = useState('');
+  const [incidentFilter, setIncidentFilter] = useState('');
+
   const getAllEntities = () => {
     dispatch(
       getEntities({
@@ -31,6 +34,21 @@ export const Patient = (props: RouteComponentProps<{ url: string }>) => {
       })
     );
   };
+
+  useEffect(() => {
+    dispatch(
+      getFilteredEntities({
+        page: paginationState.activePage - 1,
+        size: paginationState.itemsPerPage,
+        sort: `${paginationState.sort},${paginationState.order}`,
+        idFilter,
+        firstNameFilter,
+        lastNameFilter,
+        triageCategoryFilter,
+        incidentFilter,
+      })
+    );
+  }, [idFilter, firstNameFilter, lastNameFilter, triageCategoryFilter, incidentFilter]);
 
   const sortEntities = () => {
     getAllEntities();
@@ -96,87 +114,127 @@ export const Patient = (props: RouteComponentProps<{ url: string }>) => {
         </div>
       </h2>
       <div className="table-responsive">
-        {patientList && patientList.length > 0 ? (
-          <Table responsive>
-            <thead>
-              <tr>
-                <th className="hand" onClick={sort('id')}>
-                  <Translate contentKey="ipmsApp.patient.id">ID</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={sort('firstName')}>
-                  <Translate contentKey="ipmsApp.patient.firstName">First Name</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={sort('lastName')}>
-                  <Translate contentKey="ipmsApp.patient.lastName">Last Name</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th className="hand" onClick={sort('triageCategory')}>
-                  <Translate contentKey="ipmsApp.patient.triageCategory">Triage Category</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th>
-                  <Translate contentKey="ipmsApp.patient.incident">Incident</Translate> <FontAwesomeIcon icon="sort" />
-                </th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {patientList.map((patient, i) => (
-                <tr key={`entity-${i}`} data-cy="entityTable">
-                  <td>
-                    <Button tag={Link} to={`${match.url}/${patient.id}`} color="link" size="sm">
-                      {patient.id}
-                    </Button>
-                  </td>
-                  <td>{patient.firstName}</td>
-                  <td>{patient.lastName}</td>
-                  <td>
-                    <Translate contentKey={`ipmsApp.Category.${patient.triageCategory}`} />
-                  </td>
-                  <td>{patient.incident ? <Link to={`incident/${patient.incident.id}`}>{patient.incident.name}</Link> : ''}</td>
-                  <td className="text-right">
-                    <div className="btn-group flex-btn-group-container">
-                      <Button tag={Link} to={`${match.url}/${patient.id}`} color="info" size="sm" data-cy="entityDetailsButton">
-                        <FontAwesomeIcon icon="eye" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.view">View</Translate>
-                        </span>
+        <Table responsive>
+          <thead>
+            <tr>
+              <th className="hand" onClick={sort('id')}>
+                <Translate contentKey="ipmsApp.patient.id">ID</Translate> <FontAwesomeIcon icon="sort" />
+              </th>
+              <th className="hand" onClick={sort('firstName')}>
+                <Translate contentKey="ipmsApp.patient.firstName">First Name</Translate> <FontAwesomeIcon icon="sort" />
+              </th>
+              <th className="hand" onClick={sort('lastName')}>
+                <Translate contentKey="ipmsApp.patient.lastName">Last Name</Translate> <FontAwesomeIcon icon="sort" />
+              </th>
+              <th className="hand" onClick={sort('triageCategory')}>
+                <Translate contentKey="ipmsApp.patient.triageCategory">Triage Category</Translate> <FontAwesomeIcon icon="sort" />
+              </th>
+              <th>
+                <Translate contentKey="ipmsApp.patient.incident">Incident</Translate> <FontAwesomeIcon icon="sort" />
+              </th>
+              <th />
+            </tr>
+            <tr>
+              <th className="filter-input">
+                <Input onChange={e => setIdFilter(e.target.value)} value={idFilter} type="text" name="ipmsApp.patient.idFilter" />
+              </th>
+              <th className="filter-input">
+                <Input
+                  onChange={e => setFirstNameFilter(e.target.value)}
+                  value={firstNameFilter}
+                  type="text"
+                  name="ipmsApp.patient.firstNameFilter"
+                />
+              </th>
+              <th className="filter-input">
+                <Input
+                  onChange={e => setLastNameFilte(e.target.value)}
+                  value={lastNameFilter}
+                  type="text"
+                  name="ipmsApp.patient.lastNameFilter"
+                />
+              </th>
+              <th className="filter-input">
+                <Input
+                  onChange={e => setTriageCategoryFilter(e.target.value)}
+                  value={triageCategoryFilter}
+                  type="text"
+                  name="ipmsApp.patient.triageCategoryFilter"
+                />
+              </th>
+              <th className="filter-input">
+                <Input
+                  onChange={e => setIncidentFilter(e.target.value)}
+                  value={incidentFilter}
+                  type="text"
+                  name="ipmsApp.patient.incidentFilter"
+                />
+              </th>
+              <th />
+            </tr>
+          </thead>
+          <tbody>
+            {patientList && patientList.length > 0
+              ? patientList.map((patient, i) => (
+                  <tr key={`entity-${i}`} data-cy="entityTable">
+                    <td>
+                      <Button tag={Link} to={`${match.url}/${patient.id}`} color="link" size="sm">
+                        {patient.id}
                       </Button>
-                      <Button
-                        tag={Link}
-                        to={`${match.url}/${patient.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="primary"
-                        size="sm"
-                        data-cy="entityEditButton"
-                      >
-                        <FontAwesomeIcon icon="pencil-alt" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.edit">Edit</Translate>
-                        </span>
-                      </Button>
-                      <Button
-                        tag={Link}
-                        to={`${match.url}/${patient.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
-                        color="danger"
-                        size="sm"
-                        data-cy="entityDeleteButton"
-                      >
-                        <FontAwesomeIcon icon="trash" />{' '}
-                        <span className="d-none d-md-inline">
-                          <Translate contentKey="entity.action.delete">Delete</Translate>
-                        </span>
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-        ) : (
-          !loading && (
-            <div className="alert alert-warning">
-              <Translate contentKey="ipmsApp.patient.home.notFound">No Patients found</Translate>
-            </div>
-          )
-        )}
+                    </td>
+                    <td>{patient.firstName}</td>
+                    <td>{patient.lastName}</td>
+                    <td>
+                      <Translate contentKey={`ipmsApp.Category.${patient.triageCategory}`} />
+                    </td>
+                    <td>{patient.incident ? <Link to={`incident/${patient.incident.id}`}>{patient.incident.name}</Link> : ''}</td>
+                    <td className="text-right">
+                      <div className="btn-group flex-btn-group-container">
+                        <Button tag={Link} to={`${match.url}/${patient.id}`} color="info" size="sm" data-cy="entityDetailsButton">
+                          <FontAwesomeIcon icon="eye" />{' '}
+                          <span className="d-none d-md-inline">
+                            <Translate contentKey="entity.action.view">View</Translate>
+                          </span>
+                        </Button>
+                        <Button
+                          tag={Link}
+                          to={`${match.url}/${patient.id}/edit?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                          color="primary"
+                          size="sm"
+                          data-cy="entityEditButton"
+                        >
+                          <FontAwesomeIcon icon="pencil-alt" />{' '}
+                          <span className="d-none d-md-inline">
+                            <Translate contentKey="entity.action.edit">Edit</Translate>
+                          </span>
+                        </Button>
+                        <Button
+                          tag={Link}
+                          to={`${match.url}/${patient.id}/delete?page=${paginationState.activePage}&sort=${paginationState.sort},${paginationState.order}`}
+                          color="danger"
+                          size="sm"
+                          data-cy="entityDeleteButton"
+                        >
+                          <FontAwesomeIcon icon="trash" />{' '}
+                          <span className="d-none d-md-inline">
+                            <Translate contentKey="entity.action.delete">Delete</Translate>
+                          </span>
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              : !loading && (
+                  <tr>
+                    <td colSpan={6}>
+                      <div className="alert alert-warning">
+                        <Translate contentKey="ipmsApp.patient.home.notFound">No Patients found</Translate>
+                      </div>
+                    </td>
+                  </tr>
+                )}
+          </tbody>
+        </Table>
       </div>
       {totalItems ? (
         <div className={patientList && patientList.length > 0 ? '' : 'd-none'}>

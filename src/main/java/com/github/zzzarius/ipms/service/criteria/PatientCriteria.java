@@ -4,11 +4,7 @@ import com.github.zzzarius.ipms.domain.enumeration.Category;
 import java.io.Serializable;
 import java.util.Objects;
 import tech.jhipster.service.Criteria;
-import tech.jhipster.service.filter.BooleanFilter;
-import tech.jhipster.service.filter.DoubleFilter;
 import tech.jhipster.service.filter.Filter;
-import tech.jhipster.service.filter.FloatFilter;
-import tech.jhipster.service.filter.IntegerFilter;
 import tech.jhipster.service.filter.LongFilter;
 import tech.jhipster.service.filter.StringFilter;
 
@@ -52,6 +48,8 @@ public class PatientCriteria implements Serializable, Criteria {
 
     private LongFilter incidentId;
 
+    private StringFilter incidentName;
+
     public PatientCriteria() {}
 
     public PatientCriteria(PatientCriteria other) {
@@ -60,6 +58,7 @@ public class PatientCriteria implements Serializable, Criteria {
         this.lastName = other.lastName == null ? null : other.lastName.copy();
         this.triageCategory = other.triageCategory == null ? null : other.triageCategory.copy();
         this.incidentId = other.incidentId == null ? null : other.incidentId.copy();
+        this.incidentName = other.incidentName == null ? null : other.incidentName.copy();
     }
 
     @Override
@@ -142,6 +141,21 @@ public class PatientCriteria implements Serializable, Criteria {
         this.incidentId = incidentId;
     }
 
+    public StringFilter getIncidentName() {
+        return incidentName;
+    }
+
+    public StringFilter incidentName() {
+        if (incidentName == null) {
+            incidentName = new StringFilter();
+        }
+        return incidentName;
+    }
+
+    public void setIncidentName(StringFilter incidentName) {
+        this.incidentName = incidentName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -156,13 +170,14 @@ public class PatientCriteria implements Serializable, Criteria {
             Objects.equals(firstName, that.firstName) &&
             Objects.equals(lastName, that.lastName) &&
             Objects.equals(triageCategory, that.triageCategory) &&
-            Objects.equals(incidentId, that.incidentId)
+            Objects.equals(incidentId, that.incidentId) &&
+            Objects.equals(incidentName, that.incidentName)
         );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, triageCategory, incidentId);
+        return Objects.hash(id, firstName, lastName, triageCategory, incidentId, incidentName);
     }
 
     // prettier-ignore
@@ -174,6 +189,7 @@ public class PatientCriteria implements Serializable, Criteria {
             (lastName != null ? "lastName=" + lastName + ", " : "") +
             (triageCategory != null ? "triageCategory=" + triageCategory + ", " : "") +
             (incidentId != null ? "incidentId=" + incidentId + ", " : "") +
+            (incidentName != null ? "incidentName=" + incidentName + ", " : "") +
             "}";
     }
 }

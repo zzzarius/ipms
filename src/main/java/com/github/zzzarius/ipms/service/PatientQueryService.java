@@ -1,7 +1,9 @@
 package com.github.zzzarius.ipms.service;
 
-import com.github.zzzarius.ipms.domain.*; // for static metamodels
+// for static metamodels
+import com.github.zzzarius.ipms.domain.Incident_;
 import com.github.zzzarius.ipms.domain.Patient;
+import com.github.zzzarius.ipms.domain.Patient_;
 import com.github.zzzarius.ipms.repository.PatientRepository;
 import com.github.zzzarius.ipms.service.criteria.PatientCriteria;
 import java.util.List;
@@ -94,6 +96,15 @@ public class PatientQueryService extends QueryService<Patient> {
                 specification =
                     specification.and(
                         buildSpecification(criteria.getIncidentId(), root -> root.join(Patient_.incident, JoinType.LEFT).get(Incident_.id))
+                    );
+            }
+            if (criteria.getIncidentName() != null) {
+                specification =
+                    specification.and(
+                        buildSpecification(
+                            criteria.getIncidentName(),
+                            root -> root.join(Patient_.incident, JoinType.LEFT).get(Incident_.name)
+                        )
                     );
             }
         }

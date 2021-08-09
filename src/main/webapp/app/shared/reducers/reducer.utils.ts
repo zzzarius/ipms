@@ -20,6 +20,10 @@ export type IQueryParams = {
   sort?: string;
   idFilter?: string;
   nameFilter?: string;
+  firstNameFilter?: string;
+  lastNameFilter?: string;
+  triageCategoryFilter?: string;
+  incidentFilter?: string;
   startDateFilter?: string;
 };
 
