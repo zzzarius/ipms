@@ -24,6 +24,28 @@ export const getEntities = createAsyncThunk('incident/fetch_entity_list', async 
   return axios.get<IIncident[]>(requestUrl);
 });
 
+export const getFilteredEntities = createAsyncThunk(
+  'incident/fetch_filtered_entity_list',
+  async ({ page, size, sort, idFilter, nameFilter, startDateFilter }: IQueryParams) => {
+    const catcheBusterParameter = `?cacheBuster=${new Date().getTime()}`;
+    const sortParameters = sort ? `&page=${page}&size=${size}&sort=${sort}` : '';
+    const idFilterParameter = idFilter ? `&id.equals=${idFilter}` : '';
+    const nameFilterParameter = nameFilter ? `&name.contains=${nameFilter}` : '';
+    const startDateFilterParameter = startDateFilter ? `&startDate.equals=${startDateFilter}` : '';
+    const requestUrl = [
+      apiUrl,
+      catcheBusterParameter,
+      sortParameters,
+      idFilterParameter,
+      nameFilterParameter,
+      startDateFilterParameter,
+    ].join('');
+    // eslint-disable-next-line no-console
+    console.log({ requestUrl });
+    return axios.get<IIncident[]>(requestUrl);
+  }
+);
+
 export const getEntity = createAsyncThunk(
   'incident/fetch_entity',
   async (id: string | number) => {
