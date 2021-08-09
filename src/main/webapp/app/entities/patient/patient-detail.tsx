@@ -55,7 +55,7 @@ export const PatientDetail = (props: RouteComponentProps<{ id: string }>) => {
         <Button tag={Link} to="/patient" replace color="info" data-cy="entityDetailsBackButton">
           <FontAwesomeIcon icon="arrow-left" />{' '}
           <span className="d-none d-md-inline">
-            <Translate contentKey="entity.action.back">Back</Translate>
+            <Translate contentKey="entity.action.cancel">Cancel</Translate>
           </span>
         </Button>
         &nbsp;

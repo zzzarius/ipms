@@ -147,7 +147,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 <FontAwesomeIcon icon="arrow-left" />
                 &nbsp;
                 <span className="d-none d-md-inline">
-                  <Translate contentKey="entity.action.back">Back</Translate>
+                  <Translate contentKey="entity.action.cancel">Cancel</Translate>
                 </span>
               </Button>
               &nbsp;
