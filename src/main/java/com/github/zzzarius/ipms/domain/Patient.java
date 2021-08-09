@@ -23,12 +23,12 @@ public class Patient implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 2)
+    @Size(min = 2, max = 50)
     @Column(name = "first_name", nullable = false)
     private String firstName;
 
     @NotNull
-    @Size(min = 2)
+    @Size(min = 2, max = 50)
     @Column(name = "last_name", nullable = false)
     private String lastName;
 

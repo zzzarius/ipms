@@ -92,6 +92,7 @@ export const IncidentUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                   minLength: { value: 3, message: translate('entity.validation.minlength', { min: 3 }) },
+                  maxLength: { value: 255, message: translate('entity.validation.maxlength', { max: 255 }) },
                 }}
               />
               <ValidatedField

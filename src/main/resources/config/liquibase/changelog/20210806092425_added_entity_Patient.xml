@@ -14,13 +14,13 @@
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="first_name" type="varchar(255)">
+            <column name="first_name" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            <column name="last_name" type="varchar(255)">
+            <column name="last_name" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            <column name="triage_category" type="varchar(255)">
+            <column name="triage_category" type="varchar(50)">
                 <constraints nullable="true" />
             </column>
             <column name="incident_id" type="bigint">

@@ -100,6 +100,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                   minLength: { value: 2, message: translate('entity.validation.minlength', { min: 2 }) },
+                  maxLength: { value: 50, message: translate('entity.validation.maxlength', { max: 50 }) },
                 }}
               />
               <ValidatedField
@@ -111,6 +112,7 @@ export const PatientUpdate = (props: RouteComponentProps<{ id: string }>) => {
                 validate={{
                   required: { value: true, message: translate('entity.validation.required') },
                   minLength: { value: 2, message: translate('entity.validation.minlength', { min: 2 }) },
+                  maxLength: { value: 50, message: translate('entity.validation.maxlength', { max: 50 }) },
                 }}
               />
               <ValidatedField

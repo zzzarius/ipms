@@ -25,7 +25,7 @@ public class Incident implements Serializable {
     private Long id;
 
     @NotNull
-    @Size(min = 3)
+    @Size(min = 3, max = 255)
     @Column(name = "name", nullable = false)
     private String name;
 

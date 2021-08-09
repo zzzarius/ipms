@@ -22,13 +22,13 @@ enum Category {
 }
 
 entity Incident {
-  name String minlength(3) required
+  name String minlength(3) maxlength(255) required
   startDate LocalDate required
 }
 
 entity Patient {
-  firstName String required minlength(2)
-  lastName String required minlength(2)
+  firstName String required minlength(2) maxlength(50)
+  lastName String required minlength(2) maxlength(50)
   triageCategory Category
 }
 
