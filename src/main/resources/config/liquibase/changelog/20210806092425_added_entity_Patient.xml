@@ -20,7 +20,7 @@
             <column name="last_name" type="varchar(50)">
                 <constraints nullable="false" />
             </column>
-            <column name="triage_category" type="varchar(50)">
+            <column name="triage_category" type="varchar(255)">
                 <constraints nullable="true" />
             </column>
             <column name="incident_id" type="bigint">

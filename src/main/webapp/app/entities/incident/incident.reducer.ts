@@ -40,8 +40,6 @@ export const getFilteredEntities = createAsyncThunk(
       nameFilterParameter,
       startDateFilterParameter,
     ].join('');
-    // eslint-disable-next-line no-console
-    console.log({ requestUrl });
     return axios.get<IIncident[]>(requestUrl);
   }
 );
@@ -112,7 +110,7 @@ export const IncidentSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = {};
       })
-      .addMatcher(isFulfilled(getEntities), (state, action) => {
+      .addMatcher(isFulfilled(getEntities, getFilteredEntities), (state, action) => {
         return {
           ...state,
           loading: false,
@@ -126,7 +124,7 @@ export const IncidentSlice = createEntitySlice({
         state.updateSuccess = true;
         state.entity = action.payload.data;
       })
-      .addMatcher(isPending(getEntities, getEntity), state => {
+      .addMatcher(isPending(getEntities, getFilteredEntities, getEntity), state => {
         state.errorMessage = null;
         state.updateSuccess = false;
         state.loading = true;

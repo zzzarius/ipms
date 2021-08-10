@@ -47,8 +47,6 @@ export const getFilteredEntities = createAsyncThunk(
       triageCategoryFilterParameter,
       incidentFilterParameter,
     ].join('');
-    // eslint-disable-next-line no-console
-    console.log({ requestUrl });
     return axios.get<IPatient[]>(requestUrl);
   }
 );

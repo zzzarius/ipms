@@ -4,8 +4,9 @@
     {
       "fieldName": "name",
       "fieldType": "String",
-      "fieldValidateRules": ["minlength", "required"],
-      "fieldValidateRulesMinlength": "3"
+      "fieldValidateRules": ["minlength", "maxlength", "required"],
+      "fieldValidateRulesMinlength": "3",
+      "fieldValidateRulesMaxlength": "255"
     },
     {
       "fieldName": "startDate",

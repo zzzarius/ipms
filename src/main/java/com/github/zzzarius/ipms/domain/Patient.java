@@ -3,17 +3,8 @@ package com.github.zzzarius.ipms.domain;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.github.zzzarius.ipms.domain.enumeration.Category;
 import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -33,12 +24,12 @@ public class Patient implements Serializable {
 
     @NotNull
     @Size(min = 2, max = 50)
-    @Column(name = "first_name", nullable = false)
+    @Column(name = "first_name", length = 50, nullable = false)
     private String firstName;
 
     @NotNull
     @Size(min = 2, max = 50)
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "last_name", length = 50, nullable = false)
     private String lastName;
 
     @Enumerated(EnumType.STRING)
