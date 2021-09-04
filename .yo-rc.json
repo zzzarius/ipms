@@ -1,11 +1,11 @@
 {
   "generator-jhipster": {
-    "authenticationType": "jwt",
+    "authenticationType": "oauth2",
     "cacheProvider": "ehcache",
     "clientFramework": "react",
     "serverPort": "8080",
     "serviceDiscoveryType": false,
-    "skipUserManagement": false,
+    "skipUserManagement": true,
     "withAdminUi": true,
     "baseName": "IPMS",
     "buildTool": "maven",
@@ -41,9 +41,8 @@
     "otherModules": [],
     "pages": [],
     "nativeLanguage": "en",
-    "creationTimestamp": 1628241745861,
-    "jwtSecretKey": "ODI4NzAxY2RlNzQ1NjhiNGQyNjU2NjdlZmMwZWYyODE0MzZhZmM2NDQ5NTcxMzRlZTdkM2E3OTNlNGJmNDcyNDk3MzA2YjVjNjZkYTZjYWE5NTRlNDEzNDMxYjJiYTBmNmQ2NmQ4MzRlYTBjOTA1ZDg2YjUyMGI1ZGYyOWUxZjc=",
+    "creationTimestamp": 1628593306202,
     "devServerPort": 9060,
-    "lastLiquibaseTimestamp": 1628241865000
+    "lastLiquibaseTimestamp": 1628593426000
   }
 }

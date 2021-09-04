@@ -2,7 +2,7 @@ application {
   config {
     baseName IPMS
     applicationType monolith
-    /* authenticationType oauth2 */
+    authenticationType oauth2
     packageName com.github.zzzarius.ipms
     devDatabaseType h2Memory
     prodDatabaseType mysql

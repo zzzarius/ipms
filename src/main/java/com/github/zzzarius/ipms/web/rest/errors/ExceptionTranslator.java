@@ -117,40 +117,6 @@ public class ExceptionTranslator implements ProblemHandling, SecurityAdviceTrait
     }
 
     @ExceptionHandler
-    public ResponseEntity<Problem> handleEmailAlreadyUsedException(
-        com.github.zzzarius.ipms.service.EmailAlreadyUsedException ex,
-        NativeWebRequest request
-    ) {
-        EmailAlreadyUsedException problem = new EmailAlreadyUsedException();
-        return create(
-            problem,
-            request,
-            HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage())
-        );
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleUsernameAlreadyUsedException(
-        com.github.zzzarius.ipms.service.UsernameAlreadyUsedException ex,
-        NativeWebRequest request
-    ) {
-        LoginAlreadyUsedException problem = new LoginAlreadyUsedException();
-        return create(
-            problem,
-            request,
-            HeaderUtil.createFailureAlert(applicationName, true, problem.getEntityName(), problem.getErrorKey(), problem.getMessage())
-        );
-    }
-
-    @ExceptionHandler
-    public ResponseEntity<Problem> handleInvalidPasswordException(
-        com.github.zzzarius.ipms.service.InvalidPasswordException ex,
-        NativeWebRequest request
-    ) {
-        return create(new InvalidPasswordException(), request);
-    }
-
-    @ExceptionHandler
     public ResponseEntity<Problem> handleBadRequestAlertException(BadRequestAlertException ex, NativeWebRequest request) {
         return create(
             ex,

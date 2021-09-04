@@ -48,9 +48,6 @@ public class CacheConfiguration {
             createCache(cm, com.github.zzzarius.ipms.domain.User.class.getName());
             createCache(cm, com.github.zzzarius.ipms.domain.Authority.class.getName());
             createCache(cm, com.github.zzzarius.ipms.domain.User.class.getName() + ".authorities");
-            createCache(cm, com.github.zzzarius.ipms.domain.Incident.class.getName());
-            createCache(cm, com.github.zzzarius.ipms.domain.Incident.class.getName() + ".patients");
-            createCache(cm, com.github.zzzarius.ipms.domain.Patient.class.getName());
             // jhipster-needle-ehcache-add-entry
         };
     }

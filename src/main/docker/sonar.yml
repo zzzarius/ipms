@@ -11,3 +11,7 @@ services:
     # remove the "127.0.0.1:" prefix
     ports:
       - 127.0.0.1:9001:9000
+networks:
+  default:
+    external: true
+    name: ipms-external

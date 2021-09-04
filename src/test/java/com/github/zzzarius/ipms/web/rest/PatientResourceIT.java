@@ -2,6 +2,7 @@ package com.github.zzzarius.ipms.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -91,7 +92,12 @@ class PatientResourceIT {
         int databaseSizeBeforeCreate = patientRepository.findAll().size();
         // Create the Patient
         restPatientMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(patient)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(patient))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Patient in the database
@@ -113,7 +119,12 @@ class PatientResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restPatientMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(patient)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(patient))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Patient in the database
@@ -131,7 +142,12 @@ class PatientResourceIT {
         // Create the Patient, which fails.
 
         restPatientMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(patient)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(patient))
+            )
             .andExpect(status().isBadRequest());
 
         List<Patient> patientList = patientRepository.findAll();
@@ -148,7 +164,12 @@ class PatientResourceIT {
         // Create the Patient, which fails.
 
         restPatientMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(patient)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(patient))
+            )
             .andExpect(status().isBadRequest());
 
         List<Patient> patientList = patientRepository.findAll();
@@ -498,6 +519,7 @@ class PatientResourceIT {
         restPatientMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, updatedPatient.getId())
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(updatedPatient))
             )
@@ -522,6 +544,7 @@ class PatientResourceIT {
         restPatientMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, patient.getId())
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(patient))
             )
@@ -542,6 +565,7 @@ class PatientResourceIT {
         restPatientMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(patient))
             )
@@ -560,7 +584,9 @@ class PatientResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restPatientMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(patient)))
+            .perform(
+                put(ENTITY_API_URL).with(csrf()).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(patient))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Patient in the database
@@ -585,6 +611,7 @@ class PatientResourceIT {
         restPatientMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedPatient.getId())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPatient))
             )
@@ -616,6 +643,7 @@ class PatientResourceIT {
         restPatientMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedPatient.getId())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedPatient))
             )
@@ -640,6 +668,7 @@ class PatientResourceIT {
         restPatientMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, patient.getId())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(patient))
             )
@@ -660,6 +689,7 @@ class PatientResourceIT {
         restPatientMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(patient))
             )
@@ -678,7 +708,12 @@ class PatientResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restPatientMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(patient)))
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(patient))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Patient in the database
@@ -696,7 +731,7 @@ class PatientResourceIT {
 
         // Delete the patient
         restPatientMockMvc
-            .perform(delete(ENTITY_API_URL_ID, patient.getId()).accept(MediaType.APPLICATION_JSON))
+            .perform(delete(ENTITY_API_URL_ID, patient.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item

@@ -127,7 +127,10 @@ export const Patient = (props: RouteComponentProps<{ url: string }>) => {
                 <Translate contentKey="ipmsApp.patient.lastName">Last Name</Translate> <FontAwesomeIcon icon="sort" />
               </th>
               <th className="hand" onClick={sort('triageCategory')}>
-                <Translate contentKey="ipmsApp.patient.triageCategory">Triage Category</Translate> <FontAwesomeIcon icon="sort" />
+                <Translate contentKey="ipmsApp.patient.triageCategory">
+                  <FontAwesomeIcon icon="flag" /> Triage Category
+                </Translate>{' '}
+                <FontAwesomeIcon icon="sort" />
               </th>
               <th>
                 <Translate contentKey="ipmsApp.patient.incident">Incident</Translate> <FontAwesomeIcon icon="sort" />
@@ -184,7 +187,8 @@ export const Patient = (props: RouteComponentProps<{ url: string }>) => {
                     </td>
                     <td>{patient.firstName}</td>
                     <td>{patient.lastName}</td>
-                    <td>
+                    <td style={{ color: patient.triageCategory }}>
+                      {patient?.triageCategory && <FontAwesomeIcon icon="flag" />}{' '}
                       <Translate contentKey={`ipmsApp.Category.${patient.triageCategory}`} />
                     </td>
                     <td>{patient.incident ? <Link to={`incident/${patient.incident.id}`}>{patient.incident.name}</Link> : ''}</td>

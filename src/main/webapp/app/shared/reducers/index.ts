@@ -5,12 +5,7 @@ import authentication, { AuthenticationState } from './authentication';
 import applicationProfile, { ApplicationProfileState } from './application-profile';
 
 import administration, { AdministrationState } from 'app/modules/administration/administration.reducer';
-import userManagement, { UserManagementState } from 'app/modules/administration/user-management/user-management.reducer';
-import register, { RegisterState } from 'app/modules/account/register/register.reducer';
-import activate, { ActivateState } from 'app/modules/account/activate/activate.reducer';
-import password, { PasswordState } from 'app/modules/account/password/password.reducer';
-import settings, { SettingsState } from 'app/modules/account/settings/settings.reducer';
-import passwordReset, { PasswordResetState } from 'app/modules/account/password-reset/password-reset.reducer';
+import userManagement, { UserManagementState } from './user-management';
 // prettier-ignore
 import incident from 'app/entities/incident/incident.reducer';
 // prettier-ignore
@@ -23,11 +18,6 @@ const rootReducer = {
   applicationProfile,
   administration,
   userManagement,
-  register,
-  activate,
-  passwordReset,
-  password,
-  settings,
   incident,
   patient,
   /* jhipster-needle-add-reducer-combine - JHipster will add reducer here */

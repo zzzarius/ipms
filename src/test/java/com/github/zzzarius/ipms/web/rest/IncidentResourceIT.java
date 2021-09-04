@@ -2,6 +2,7 @@ package com.github.zzzarius.ipms.web.rest;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.hasItem;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -90,7 +91,12 @@ class IncidentResourceIT {
         int databaseSizeBeforeCreate = incidentRepository.findAll().size();
         // Create the Incident
         restIncidentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(incident)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(incident))
+            )
             .andExpect(status().isCreated());
 
         // Validate the Incident in the database
@@ -111,7 +117,12 @@ class IncidentResourceIT {
 
         // An entity with an existing ID cannot be created, so this API call must fail
         restIncidentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(incident)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(incident))
+            )
             .andExpect(status().isBadRequest());
 
         // Validate the Incident in the database
@@ -129,7 +140,12 @@ class IncidentResourceIT {
         // Create the Incident, which fails.
 
         restIncidentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(incident)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(incident))
+            )
             .andExpect(status().isBadRequest());
 
         List<Incident> incidentList = incidentRepository.findAll();
@@ -146,7 +162,12 @@ class IncidentResourceIT {
         // Create the Incident, which fails.
 
         restIncidentMockMvc
-            .perform(post(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(incident)))
+            .perform(
+                post(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(incident))
+            )
             .andExpect(status().isBadRequest());
 
         List<Incident> incidentList = incidentRepository.findAll();
@@ -467,6 +488,7 @@ class IncidentResourceIT {
         restIncidentMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, updatedIncident.getId())
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(updatedIncident))
             )
@@ -490,6 +512,7 @@ class IncidentResourceIT {
         restIncidentMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, incident.getId())
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(incident))
             )
@@ -510,6 +533,7 @@ class IncidentResourceIT {
         restIncidentMockMvc
             .perform(
                 put(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
                     .contentType(MediaType.APPLICATION_JSON)
                     .content(TestUtil.convertObjectToJsonBytes(incident))
             )
@@ -528,7 +552,12 @@ class IncidentResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIncidentMockMvc
-            .perform(put(ENTITY_API_URL).contentType(MediaType.APPLICATION_JSON).content(TestUtil.convertObjectToJsonBytes(incident)))
+            .perform(
+                put(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(TestUtil.convertObjectToJsonBytes(incident))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Incident in the database
@@ -553,6 +582,7 @@ class IncidentResourceIT {
         restIncidentMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedIncident.getId())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedIncident))
             )
@@ -583,6 +613,7 @@ class IncidentResourceIT {
         restIncidentMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, partialUpdatedIncident.getId())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(partialUpdatedIncident))
             )
@@ -606,6 +637,7 @@ class IncidentResourceIT {
         restIncidentMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, incident.getId())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(incident))
             )
@@ -626,6 +658,7 @@ class IncidentResourceIT {
         restIncidentMockMvc
             .perform(
                 patch(ENTITY_API_URL_ID, count.incrementAndGet())
+                    .with(csrf())
                     .contentType("application/merge-patch+json")
                     .content(TestUtil.convertObjectToJsonBytes(incident))
             )
@@ -644,7 +677,12 @@ class IncidentResourceIT {
 
         // If url ID doesn't match entity ID, it will throw BadRequestAlertException
         restIncidentMockMvc
-            .perform(patch(ENTITY_API_URL).contentType("application/merge-patch+json").content(TestUtil.convertObjectToJsonBytes(incident)))
+            .perform(
+                patch(ENTITY_API_URL)
+                    .with(csrf())
+                    .contentType("application/merge-patch+json")
+                    .content(TestUtil.convertObjectToJsonBytes(incident))
+            )
             .andExpect(status().isMethodNotAllowed());
 
         // Validate the Incident in the database
@@ -662,7 +700,7 @@ class IncidentResourceIT {
 
         // Delete the incident
         restIncidentMockMvc
-            .perform(delete(ENTITY_API_URL_ID, incident.getId()).accept(MediaType.APPLICATION_JSON))
+            .perform(delete(ENTITY_API_URL_ID, incident.getId()).with(csrf()).accept(MediaType.APPLICATION_JSON))
             .andExpect(status().isNoContent());
 
         // Validate the database contains one less item
